@@ -1,4 +1,3 @@
-using RecordShop.Client.Pages;
 using RecordShop.Components;
 
 var builder = WebApplication.CreateBuilder(args);
