@@ -1,0 +1,13 @@
+<div>
+    <h3>@Record.Title</h3>
+    <p>@Record.Artist</p>
+    <p>@Record.Genre</p>
+    <p>£@Record.Price.ToString("0.00")</p>
+</div>
+
+@code 
+{
+    [Parameter]
+    public Record Record { get; set; }
+}
+
