@@ -9,7 +9,7 @@ cd RecordShop/RecordShop
 dotnet watch
 ```
 
-Then open https://localhost:5001 in your browser.
+Then open https://localhost:PORT in your browser (check terminal for port number).
 
 ## Tech Stack
 
@@ -17,33 +17,39 @@ Then open https://localhost:5001 in your browser.
 - **Auto interactivity mode** — uses Server-side rendering initially, switches to WebAssembly once downloaded
 - **Two projects** — `RecordShop` (server) + `RecordShop.Client` (WebAssembly)
 
+## Routes
+
+| Route | Page | Description |
+|-------|------|-------------|
+| `/` | Home.razor | Hardcoded single record (temporary) |
+| `/records` | AllRecordsPage.razor | All records from API |
+| `/records/{id}` | RecordPage.razor | Single record detail & edit |
+
 ## Component Structure
 
 ```
-App.razor
-└── Routes.razor
-    └── MainLayout.razor          ← Layout wrapper
-        ├── <header>
-        │   ├── .header-brand     ← Shop title & tagline
-        │   └── NavMenu.razor     ← Navigation links
-        ├── <main>
-        │   └── @Body             ← Page content renders here
-        └── <footer>              ← Name & year
-
 Pages/
-└── Home.razor                    ← "/" route
-    └── RecordsSummaryList.razor  ← Takes List<Record>
-        └── RecordSummary.razor   ← Takes single Record
-            ├── Title
-            ├── Artist
-            ├── Genre
-            └── Price
+├── Home.razor                  ← "/" hardcoded album (temporary)
+├── AllRecordsPage.razor        ← "/records"
+│   └── RecordsLoader           ← GET /api/albums
+│       └── RecordsSummaryList
+│           └── RecordSummary × N
+└── RecordPage.razor            ← "/records/{id}"
+    └── RecordLoader            ← GET /api/albums/{id}
+        └── RecordDetails       ← EditForm + Save (PUT /api/albums/{id})
+
+Layout/
+├── MainLayout.razor            ← header / main / footer
+└── NavMenu.razor               ← navigation links
 
 Models/
-└── Record.cs
-    ├── string Title
+└── Album.cs
+    ├── int Id
+    ├── string Name
     ├── string Artist
     ├── string Genre
+    ├── int ReleaseYear
+    ├── int Stock
     └── decimal Price
 ```
 
@@ -56,7 +62,6 @@ Models/
 
 ## Planned Features
 
-- Connect to Record Shop API for real data
-- Individual record detail page
+- Navigation links from record list to detail page
 - Browse by genre
 - Search functionality
