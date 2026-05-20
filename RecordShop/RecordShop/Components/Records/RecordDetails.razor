@@ -25,7 +25,7 @@
     private Album editableAlbum = new Album();
     private Album? updatedAlbum = null;
 
-    protected override void OnInitialized()
+    protected override void OnParametersSet()
     {
         editableAlbum = new Album
         {
@@ -38,7 +38,7 @@
         };
     }
 
-    private void SaveChanges()
+    private async Task SaveChanges()
     {
         updatedAlbum = new Album
         {
@@ -49,5 +49,8 @@
             ReleaseYear = editableAlbum.ReleaseYear,
             Price = editableAlbum.Price
         };
+        var http = new HttpClient { BaseAddress = new Uri("http://localhost:5113") };
+        await http.PutAsJsonAsync($"/api/albums/{editableAlbum.Id}", editableAlbum);
+
     }
 }
