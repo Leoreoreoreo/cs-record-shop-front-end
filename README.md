@@ -1,6 +1,6 @@
 # Leo's Record Shop
 
-A Blazor Web App built with .NET 8 and Auto interactivity mode.
+A record shop website built with Blazor and .NET 8.
 
 ## How to Run
 
@@ -9,59 +9,39 @@ cd RecordShop/RecordShop
 dotnet watch
 ```
 
-Then open https://localhost:PORT in your browser (check terminal for port number).
-
-## Tech Stack
-
-- **Blazor Web App** — .NET 8
-- **Auto interactivity mode** — uses Server-side rendering initially, switches to WebAssembly once downloaded
-- **Two projects** — `RecordShop` (server) + `RecordShop.Client` (WebAssembly)
-
-## Routes
-
-| Route | Page | Description |
-|-------|------|-------------|
-| `/` | Home.razor | Hardcoded single record (temporary) |
-| `/records` | AllRecordsPage.razor | All records from API |
-| `/records/{id}` | RecordPage.razor | Single record detail & edit |
-
-## Component Structure
+## Project Structure
 
 ```
 Pages/
-├── Home.razor                  ← "/" hardcoded album (temporary)
-├── AllRecordsPage.razor        ← "/records"
-│   └── RecordsLoader           ← GET /api/albums
+├── Home.razor                   ← /
+├── AllRecordsPage.razor         ← /records
+│   └── RecordsLoader            ← fetches all albums from API
 │       └── RecordsSummaryList
 │           └── RecordSummary × N
-└── RecordPage.razor            ← "/records/{id}"
-    └── RecordLoader            ← GET /api/albums/{id}
-        └── RecordDetails       ← EditForm + Save (PUT /api/albums/{id})
+└── RecordPage.razor             ← /records/{id}
+    └── RecordLoader             ← fetches single album from API
+        └── RecordDetails        ← edit form + save to API
 
 Layout/
-├── MainLayout.razor            ← header / main / footer
-└── NavMenu.razor               ← navigation links
+├── MainLayout.razor             ← header / main / footer
+└── NavMenu.razor
 
-Models/
-└── Album.cs
-    ├── int Id
-    ├── string Name
-    ├── string Artist
-    ├── string Genre
-    ├── int ReleaseYear
-    ├── int Stock
-    └── decimal Price
+Model/
+└── Album.cs                     ← Id, Name, Artist, Genre, ReleaseYear, Stock, Price
 ```
 
-## Projects
+## API
 
-| Project | Purpose |
-|---------|---------|
-| `RecordShop` | Server-side rendering & InteractiveServer components |
-| `RecordShop.Client` | WebAssembly client-side components |
+Backend: `http://localhost:5113`
 
-## Planned Features
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/albums` | Get all albums |
+| GET | `/api/albums/{id}` | Get single album |
+| PUT | `/api/albums/{id}` | Update album |
 
-- Navigation links from record list to detail page
+## Planned
+
+- Navigation between list and detail pages
 - Browse by genre
-- Search functionality
+- Search
