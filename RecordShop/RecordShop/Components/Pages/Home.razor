@@ -3,15 +3,6 @@
 <PageTitle>Leo's Record Shop</PageTitle>
 
 <h2>Welcome to Leo's Record Shop</h2>
-<p>Browse our collection of vinyl records — coming soon!</p>
-<RecordsSummaryList Records="records" />
+<p>Browse our collection of vinyl records.</p>
 
-@code
-{
-    private List<Record> records = new List<Record>
-{
-    new Record { Title = "Abbey Road", Artist = "The Beatles", Genre = "Rock", Price = 19.99m },
-    new Record { Title = "Thriller", Artist = "Michael Jackson", Genre = "Pop", Price = 14.99m }
-};
-
-}
+<RecordsLoader />

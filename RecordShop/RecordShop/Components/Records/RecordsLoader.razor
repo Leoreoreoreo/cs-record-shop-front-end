@@ -1,0 +1,33 @@
+@using System.Net.Http.Json
+
+@if (errorMessage != null)
+{
+    <p>Error: @errorMessage</p>
+}
+else if (albums != null)
+{
+    <RecordsSummaryList Albums="albums" />
+}
+else
+{
+    <p>Loading records...</p>
+}
+
+@code
+{
+    private List<Album>? albums;
+    private string? errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var http = new HttpClient { BaseAddress = new Uri("http://localhost:5113") };
+            albums = await http.GetFromJsonAsync<List<Album>>("/api/albums");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+    }
+}
