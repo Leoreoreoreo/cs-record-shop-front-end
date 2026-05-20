@@ -1,0 +1,24 @@
+@rendermode InteractiveServer
+<EditForm Model="newAlbum" OnValidSubmit="HandleSubmit">
+    <DataAnnotationsValidator />
+    <InputText @bind-Value="newAlbum.Name" />
+    <ValidationMessage For ="@(() => newAlbum.Name)" />
+    <InputText @bind-Value="newAlbum.Artist" />
+    <ValidationMessage For ="@(() => newAlbum.Artist)" />
+    <InputText @bind-Value="newAlbum.Genre" />
+    <ValidationMessage For ="@(() => newAlbum.Genre)" />
+    <InputNumber @bind-Value="newAlbum.ReleaseYear" />
+    <ValidationMessage For ="@(() => newAlbum.ReleaseYear)" />
+    <InputNumber @bind-Value="newAlbum.Price" />
+    <ValidationMessage For ="@(() => newAlbum.Price)" />
+    <button type="submit">Add Record</button>
+</EditForm>
+
+@code{
+    private Album newAlbum = new Album();
+    private async Task HandleSubmit()
+    {
+        var http = new HttpClient{BaseAddress = new Uri("http://localhost:5113")};
+        await http.PostAsJsonAsync("/api/albums", newAlbum);
+    }
+}
