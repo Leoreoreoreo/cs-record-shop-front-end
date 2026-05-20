@@ -1,4 +1,6 @@
 @rendermode InteractiveServer
+@inject NavigationManager Nav
+
 
 <EditForm Model="editableAlbum">
     <InputText @bind-Value="editableAlbum.Name" />
@@ -7,6 +9,7 @@
     <InputNumber @bind-Value="editableAlbum.ReleaseYear" />
     <InputNumber @bind-Value="editableAlbum.Price" />
     <button type="button" @onclick="SaveChanges">Save Changes</button>
+    <button @onclick="ConfirmDelete"><i class="bi bi-trash"></i></button>
 </EditForm>
 
 @if (updatedAlbum != null)
@@ -17,13 +20,28 @@
     <p>@updatedAlbum.ReleaseYear</p>
     <p>£@updatedAlbum.Price.ToString("0.00")</p>
 }
+@if (showConfirm)
+{
+    <p>Confirm Delete?</p>
+    <button @onclick="DeleteRecord">Confirm</button>
+    <button @onclick="() => showConfirm = false">Cancel</button>
+}
+@if (deleteSuccess)
+{
+    <p>Record deleted successfully!</p>
+}
+
+
 
 @code {
     [Parameter]
-    public Album Album { get; set; }
+    public Album? Album { get; set; }
 
     private Album editableAlbum = new Album();
     private Album? updatedAlbum = null;
+    private bool showConfirm = false;
+    private bool deleteSuccess = false;
+
 
     protected override void OnParametersSet()
     {
@@ -52,5 +70,18 @@
         var http = new HttpClient { BaseAddress = new Uri("http://localhost:5113") };
         await http.PutAsJsonAsync($"/api/albums/{editableAlbum.Id}", editableAlbum);
 
+    }
+    private void ConfirmDelete()
+    {
+        showConfirm = true;
+    }
+    private async Task DeleteRecord()
+    {
+        var http = new HttpClient{BaseAddress = new Uri("http://localhost:5113")};
+        await http.DeleteAsync($"/api/albums/{editableAlbum.Id}");
+        deleteSuccess = true;
+        StateHasChanged();
+        await Task.Delay(1500);
+        Nav.NavigateTo("/records");
     }
 }
