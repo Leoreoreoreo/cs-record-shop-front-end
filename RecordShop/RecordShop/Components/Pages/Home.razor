@@ -2,7 +2,17 @@
 
 <PageTitle>Leo's Record Shop</PageTitle>
 
-<h2>Welcome to Leo's Record Shop</h2>
-<p>Browse our collection of vinyl records.</p>
+<RecordDetails Album="album" />
 
-<RecordsLoader />
+@code {
+    private Album album = new Album 
+    { 
+        Id = 1, 
+        Name = "Abbey Road", 
+        Artist = "The Beatles", 
+        Genre = "Rock", 
+        ReleaseYear = 1969, 
+        Price = 19.99m 
+    };
+}
+

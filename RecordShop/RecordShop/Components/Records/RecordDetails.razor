@@ -1,0 +1,53 @@
+@rendermode InteractiveServer
+
+<EditForm Model="editableAlbum">
+    <InputText @bind-Value="editableAlbum.Name" />
+    <InputText @bind-Value="editableAlbum.Artist" />
+    <InputText @bind-Value="editableAlbum.Genre" />
+    <InputNumber @bind-Value="editableAlbum.ReleaseYear" />
+    <InputNumber @bind-Value="editableAlbum.Price" />
+    <button type="button" @onclick="SaveChanges">Save Changes</button>
+</EditForm>
+
+@if (updatedAlbum != null)
+{
+    <p>@updatedAlbum.Name</p>
+    <p>@updatedAlbum.Artist</p>
+    <p>@updatedAlbum.Genre</p>
+    <p>@updatedAlbum.ReleaseYear</p>
+    <p>£@updatedAlbum.Price.ToString("0.00")</p>
+}
+
+@code {
+    [Parameter]
+    public Album Album { get; set; }
+
+    private Album editableAlbum = new Album();
+    private Album? updatedAlbum = null;
+
+    protected override void OnInitialized()
+    {
+        editableAlbum = new Album
+        {
+            Id = Album.Id,
+            Name = Album.Name,
+            Artist = Album.Artist,
+            Genre = Album.Genre,
+            ReleaseYear = Album.ReleaseYear,
+            Price = Album.Price
+        };
+    }
+
+    private void SaveChanges()
+    {
+        updatedAlbum = new Album
+        {
+            Id = editableAlbum.Id,
+            Name = editableAlbum.Name,
+            Artist = editableAlbum.Artist,
+            Genre = editableAlbum.Genre,
+            ReleaseYear = editableAlbum.ReleaseYear,
+            Price = editableAlbum.Price
+        };
+    }
+}
