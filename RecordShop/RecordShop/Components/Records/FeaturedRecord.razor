@@ -1,0 +1,12 @@
+@if (Album != null)
+{
+    <div>
+        <h3>Featured Record</h3>
+        <RecordSummary Album="Album" />
+    </div>
+}
+
+@code {
+    [Parameter]
+    public Album? Album { get; set; }
+}

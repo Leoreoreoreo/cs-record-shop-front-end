@@ -1,7 +1,27 @@
 @page "/"
+@using System.Net.Http.Json
 
 <PageTitle>Leo's Record Shop</PageTitle>
 
 <h2>Welcome to Leo's Record Shop</h2>
 <p>Discover our collection of vinyl records. Browse all records or add your own.</p>
 <a href="/records">Browse All Records</a>
+
+@if (featured != null)
+{
+    <FeaturedRecord Album="featured" />
+}
+
+@code {
+    private Album? featured;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var http = new HttpClient { BaseAddress = new Uri(ApiConfig.BaseUrl) };
+        var albums = await http.GetFromJsonAsync<List<Album>>("/api/albums");
+        if (albums != null && albums.Count > 0)
+        {
+            featured = albums[new Random().Next(albums.Count)];
+        }
+    }
+}
