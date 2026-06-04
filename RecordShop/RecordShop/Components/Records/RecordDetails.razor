@@ -22,6 +22,10 @@
     <p>£@updatedAlbum.Price.ToString("0.00")</p>
     <p>In stock: @updatedAlbum.Stock</p>
 }
+@if (saveMessage != null)
+{
+    <p>@saveMessage</p>
+}
 @if (showConfirm)
 {
     <p>Confirm Delete?</p>
@@ -41,6 +45,7 @@
 
     private Album editableAlbum = new Album();
     private Album? updatedAlbum = null;
+    private string? saveMessage;
     private bool showConfirm = false;
     private bool deleteSuccess = false;
 
@@ -72,8 +77,15 @@
             Stock = editableAlbum.Stock
         };
         var http = new HttpClient { BaseAddress = new Uri(ApiConfig.BaseUrl) };
-        await http.PutAsJsonAsync($"/api/albums/{editableAlbum.Id}", editableAlbum);
-
+        var response = await http.PutAsJsonAsync($"/api/albums/{editableAlbum.Id}", editableAlbum);
+        if (response.IsSuccessStatusCode)
+        {
+            saveMessage = "Changes saved!";
+        }
+        else
+        {
+            saveMessage = "Could not save changes. Please try again.";
+        }
     }
     private void ConfirmDelete()
     {

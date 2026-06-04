@@ -1,4 +1,6 @@
 @rendermode InteractiveServer
+@inject NavigationManager Nav
+
 <EditForm Model="newAlbum" OnValidSubmit="HandleSubmit">
     <DataAnnotationsValidator />
     <InputText @bind-Value="newAlbum.Name" />
@@ -16,11 +18,26 @@
     <button type="submit">Add Record</button>
 </EditForm>
 
+@if (errorMessage != null)
+{
+    <p>@errorMessage</p>
+}
+
 @code{
     private Album newAlbum = new Album();
+    private string? errorMessage;
+
     private async Task HandleSubmit()
     {
         var http = new HttpClient{BaseAddress = new Uri(ApiConfig.BaseUrl)};
-        await http.PostAsJsonAsync("/api/albums", newAlbum);
+        var response = await http.PostAsJsonAsync("/api/albums", newAlbum);
+        if (response.IsSuccessStatusCode)
+        {
+            Nav.NavigateTo("/records");
+        }
+        else
+        {
+            errorMessage = "Something went wrong while adding the record. Please try again.";
+        }
     }
 }
