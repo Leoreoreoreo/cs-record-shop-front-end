@@ -1,5 +1,4 @@
 @page "/"
-@using System.Net.Http.Json
 
 <PageTitle>Leo's Record Shop</PageTitle>
 
@@ -13,15 +12,16 @@
 }
 
 @code {
+    [CascadingParameter]
+    public List<Album>? Albums { get; set; }
+
     private Album? featured;
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnParametersSet()
     {
-        var http = new HttpClient { BaseAddress = new Uri(ApiConfig.BaseUrl) };
-        var albums = await http.GetFromJsonAsync<List<Album>>("/api/albums");
-        if (albums != null && albums.Count > 0)
+        if (featured == null && Albums != null && Albums.Count > 0)
         {
-            featured = albums[new Random().Next(albums.Count)];
+            featured = Albums[new Random().Next(Albums.Count)];
         }
     }
 }

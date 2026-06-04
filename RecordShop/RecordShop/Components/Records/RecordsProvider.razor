@@ -1,0 +1,25 @@
+@using System.Net.Http.Json
+
+<CascadingValue Value="albums">
+    @ChildContent
+</CascadingValue>
+
+@code {
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    private List<Album>? albums;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var http = new HttpClient { BaseAddress = new Uri(ApiConfig.BaseUrl) };
+            albums = await http.GetFromJsonAsync<List<Album>>("/api/albums");
+        }
+        catch
+        {
+            albums = null;
+        }
+    }
+}

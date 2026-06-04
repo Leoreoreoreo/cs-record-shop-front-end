@@ -1,3 +1,15 @@
 @page "/records"
-<RecordsLoader />
 
+@if (Albums != null)
+{
+    <RecordsSummaryList Albums="Albums" />
+}
+else
+{
+    <p>Loading records...</p>
+}
+
+@code {
+    [CascadingParameter]
+    public List<Album>? Albums { get; set; }
+}
