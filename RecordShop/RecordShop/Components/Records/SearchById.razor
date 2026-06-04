@@ -1,0 +1,40 @@
+@rendermode InteractiveServer
+@using System.Net.Http.Json
+
+<div>
+    <input type="number" @bind="searchId" />
+    <button @onclick="Search">Search</button>
+</div>
+
+@if (searched)
+{
+    @if (foundAlbum != null)
+    {
+        <RecordSummary Album="foundAlbum" />
+    }
+    else
+    {
+        <p>No record found with that ID.</p>
+    }
+}
+
+@code {
+    private int searchId;
+    private Album? foundAlbum;
+    private bool searched = false;
+
+    private async Task Search()
+    {
+        var http = new HttpClient { BaseAddress = new Uri(ApiConfig.BaseUrl) };
+        var response = await http.GetAsync($"/api/albums/{searchId}");
+        if (response.IsSuccessStatusCode)
+        {
+            foundAlbum = await response.Content.ReadFromJsonAsync<Album>();
+        }
+        else
+        {
+            foundAlbum = null;
+        }
+        searched = true;
+    }
+}

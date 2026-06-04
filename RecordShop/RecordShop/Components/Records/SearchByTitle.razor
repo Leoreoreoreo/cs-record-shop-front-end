@@ -1,0 +1,30 @@
+@rendermode InteractiveServer
+@using System.Net.Http.Json
+
+<div>
+    <input @bind="title" placeholder="Search by title" />
+    <button @onclick="Search">Search</button>
+</div>
+
+@if (results != null)
+{
+    @if (results.Count > 0)
+    {
+        <RecordsSummaryList Albums="results" />
+    }
+    else
+    {
+        <p>No records found.</p>
+    }
+}
+
+@code {
+    private string title = "";
+    private List<Album>? results;
+
+    private async Task Search()
+    {
+        var http = new HttpClient { BaseAddress = new Uri(ApiConfig.BaseUrl) };
+        results = await http.GetFromJsonAsync<List<Album>>($"/api/albums?name={Uri.EscapeDataString(title)}");
+    }
+}
