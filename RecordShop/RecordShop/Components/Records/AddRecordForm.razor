@@ -18,7 +18,7 @@
     private Album newAlbum = new Album();
     private async Task HandleSubmit()
     {
-        var http = new HttpClient{BaseAddress = new Uri("http://localhost:5113")};
+        var http = new HttpClient{BaseAddress = new Uri(ApiConfig.BaseUrl)};
         await http.PostAsJsonAsync("/api/albums", newAlbum);
     }
 }

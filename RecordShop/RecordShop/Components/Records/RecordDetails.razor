@@ -67,7 +67,7 @@
             ReleaseYear = editableAlbum.ReleaseYear,
             Price = editableAlbum.Price
         };
-        var http = new HttpClient { BaseAddress = new Uri("http://localhost:5113") };
+        var http = new HttpClient { BaseAddress = new Uri(ApiConfig.BaseUrl) };
         await http.PutAsJsonAsync($"/api/albums/{editableAlbum.Id}", editableAlbum);
 
     }
@@ -77,7 +77,7 @@
     }
     private async Task DeleteRecord()
     {
-        var http = new HttpClient{BaseAddress = new Uri("http://localhost:5113")};
+        var http = new HttpClient{BaseAddress = new Uri(ApiConfig.BaseUrl)};
         await http.DeleteAsync($"/api/albums/{editableAlbum.Id}");
         deleteSuccess = true;
         StateHasChanged();

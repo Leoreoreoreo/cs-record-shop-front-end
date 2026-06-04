@@ -22,7 +22,7 @@ else
     {
         try
         {
-            var http = new HttpClient { BaseAddress = new Uri("http://localhost:5113") };
+            var http = new HttpClient { BaseAddress = new Uri(ApiConfig.BaseUrl) };
             albums = await http.GetFromJsonAsync<List<Album>>("/api/albums");
         }
         catch (Exception ex)

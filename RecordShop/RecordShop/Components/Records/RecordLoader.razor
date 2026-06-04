@@ -24,7 +24,7 @@ else
     {
         try
         {
-            var http = new HttpClient { BaseAddress = new Uri("http://localhost:5113") };
+            var http = new HttpClient { BaseAddress = new Uri(ApiConfig.BaseUrl) };
             album = await http.GetFromJsonAsync<Album>($"/api/albums/{Id}");
         }
         catch (Exception ex)
