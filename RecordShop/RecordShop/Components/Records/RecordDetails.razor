@@ -8,6 +8,7 @@
     <InputText @bind-Value="editableAlbum.Genre" />
     <InputNumber @bind-Value="editableAlbum.ReleaseYear" />
     <InputNumber @bind-Value="editableAlbum.Price" />
+    <InputNumber @bind-Value="editableAlbum.Stock" />
     <button type="button" @onclick="SaveChanges">Save Changes</button>
     <button @onclick="ConfirmDelete"><i class="bi bi-trash"></i></button>
 </EditForm>
@@ -19,6 +20,7 @@
     <p>@updatedAlbum.Genre</p>
     <p>@updatedAlbum.ReleaseYear</p>
     <p>£@updatedAlbum.Price.ToString("0.00")</p>
+    <p>In stock: @updatedAlbum.Stock</p>
 }
 @if (showConfirm)
 {
@@ -52,7 +54,8 @@
             Artist = Album.Artist,
             Genre = Album.Genre,
             ReleaseYear = Album.ReleaseYear,
-            Price = Album.Price
+            Price = Album.Price,
+            Stock = Album.Stock
         };
     }
 
@@ -65,7 +68,8 @@
             Artist = editableAlbum.Artist,
             Genre = editableAlbum.Genre,
             ReleaseYear = editableAlbum.ReleaseYear,
-            Price = editableAlbum.Price
+            Price = editableAlbum.Price,
+            Stock = editableAlbum.Stock
         };
         var http = new HttpClient { BaseAddress = new Uri(ApiConfig.BaseUrl) };
         await http.PutAsJsonAsync($"/api/albums/{editableAlbum.Id}", editableAlbum);

@@ -11,6 +11,8 @@
     <ValidationMessage For ="@(() => newAlbum.ReleaseYear)" />
     <InputNumber @bind-Value="newAlbum.Price" />
     <ValidationMessage For ="@(() => newAlbum.Price)" />
+    <InputNumber @bind-Value="newAlbum.Stock" />
+    <ValidationMessage For ="@(() => newAlbum.Stock)" />
     <button type="submit">Add Record</button>
 </EditForm>
 
