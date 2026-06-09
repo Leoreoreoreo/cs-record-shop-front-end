@@ -36,6 +36,10 @@
 {
     <p>Record deleted successfully!</p>
 }
+@if (deleteError)
+{
+    <p>Could not delete this record. Please try again.</p>
+}
 
 
 
@@ -48,6 +52,7 @@
     private string? saveMessage;
     private bool showConfirm = false;
     private bool deleteSuccess = false;
+    private bool deleteError = false;
 
 
     protected override void OnParametersSet()
@@ -94,8 +99,15 @@
     private async Task DeleteRecord()
     {
         var http = new HttpClient{BaseAddress = new Uri(ApiConfig.BaseUrl)};
-        await http.DeleteAsync($"/api/albums/{editableAlbum.Id}");
+        var response = await http.DeleteAsync($"/api/albums/{editableAlbum.Id}");
+        if (!response.IsSuccessStatusCode)
+        {
+            deleteError = true;
+            showConfirm = false;
+            return;
+        }
         deleteSuccess = true;
+        showConfirm = false;
         StateHasChanged();
         await Task.Delay(1500);
         Nav.NavigateTo("/records");
