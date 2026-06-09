@@ -1,12 +1,6 @@
 @inherits LayoutComponentBase
 
-<header>
-    <div class="header-brand">
-        <h1>Leo's Record Shop</h1>
-        <p>Welcome to Leo's Record shop</p>
-    </div>
-    <NavMenu />
-</header>
+<Header />
 
 <main>
     <RecordsProvider>
@@ -14,9 +8,7 @@
     </RecordsProvider>
 </main>
 
-<footer>
-    <p>Leo &copy; @DateTime.Now.Year</p>
-</footer>
+<Footer />
 
 <div id="blazor-error-ui">
     An unhandled error has occurred.
