@@ -1,0 +1,58 @@
+@page "/orders"
+@rendermode InteractiveServer
+@using System.Net.Http.Json
+@inject AuthState Auth
+
+<PageTitle>My Orders - Leo's Record Shop</PageTitle>
+
+<h2>My Orders</h2>
+
+@if (!Auth.IsLoggedIn)
+{
+    <p>Please <a href="/login">log in</a> to see your orders.</p>
+}
+else if (orders == null)
+{
+    <p>Loading orders...</p>
+}
+else if (orders.Count == 0)
+{
+    <p>You have no orders yet.</p>
+}
+else
+{
+    @foreach (var order in orders)
+    {
+        <div class="record-card">
+            <h3>Order #@order.Id</h3>
+            <p>@order.CreatedAt.ToLocalTime().ToString("d MMM yyyy")</p>
+            <ul>
+                @foreach (var item in order.Items)
+                {
+                    <li>@item.AlbumName × @item.Quantity — £@item.UnitPrice.ToString("0.00")</li>
+                }
+            </ul>
+            <p>Total: £@order.Total.ToString("0.00")</p>
+        </div>
+    }
+}
+
+@code {
+    private List<Order>? orders;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!Auth.IsLoggedIn) return;
+
+        var http = new HttpClient { BaseAddress = new Uri(ApiConfig.BaseUrl) };
+        http.DefaultRequestHeaders.Add("Authorization", $"Bearer {Auth.Token}");
+        try
+        {
+            orders = await http.GetFromJsonAsync<List<Order>>("/api/orders");
+        }
+        catch
+        {
+            orders = new List<Order>();
+        }
+    }
+}

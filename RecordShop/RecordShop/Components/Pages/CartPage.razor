@@ -1,0 +1,71 @@
+@page "/cart"
+@rendermode InteractiveServer
+@using System.Linq
+@using System.Net.Http.Json
+@inject CartState Cart
+@inject AuthState Auth
+
+<PageTitle>Cart - Leo's Record Shop</PageTitle>
+
+<h2>Your Cart</h2>
+
+@if (Cart.Items.Count == 0)
+{
+    <p>Your cart is empty.</p>
+}
+else
+{
+    <ul class="records-list">
+        @foreach (var item in Cart.Items)
+        {
+            <li>
+                @item.Album.Name — £@item.Album.Price.ToString("0.00") × @item.Quantity
+                <button @onclick="() => Remove(item.Album.Id)">Remove</button>
+            </li>
+        }
+    </ul>
+    <p>Total: £@Cart.Total.ToString("0.00")</p>
+
+    @if (!Auth.IsLoggedIn)
+    {
+        <p>Please <a href="/login">log in</a> to check out.</p>
+    }
+    else
+    {
+        <button @onclick="Checkout">Checkout</button>
+    }
+}
+
+@if (message != null)
+{
+    <p>@message</p>
+}
+
+@code {
+    private string? message;
+
+    private void Remove(int albumId)
+    {
+        Cart.Remove(albumId);
+    }
+
+    private async Task Checkout()
+    {
+        var request = new
+        {
+            items = Cart.Items.Select(i => new { albumId = i.Album.Id, quantity = i.Quantity }).ToList()
+        };
+        var http = new HttpClient { BaseAddress = new Uri(ApiConfig.BaseUrl) };
+        http.DefaultRequestHeaders.Add("Authorization", $"Bearer {Auth.Token}");
+        var response = await http.PostAsJsonAsync("/api/orders", request);
+        if (response.IsSuccessStatusCode)
+        {
+            Cart.Clear();
+            message = "Order placed! Thank you.";
+        }
+        else
+        {
+            message = "Could not place the order. Please try again.";
+        }
+    }
+}

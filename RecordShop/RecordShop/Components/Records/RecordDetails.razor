@@ -1,7 +1,14 @@
 @rendermode InteractiveServer
 @inject NavigationManager Nav
 @inject AuthState Auth
+@inject CartState Cart
 
+
+<button type="button" @onclick="AddToCart">Add to cart</button>
+@if (addedToCart)
+{
+    <p>Added to cart.</p>
+}
 
 <EditForm Model="editableAlbum">
     <InputText @bind-Value="editableAlbum.Name" />
@@ -54,6 +61,16 @@
     private bool showConfirm = false;
     private bool deleteSuccess = false;
     private bool deleteError = false;
+    private bool addedToCart = false;
+
+    private void AddToCart()
+    {
+        if (Album != null)
+        {
+            Cart.Add(Album);
+            addedToCart = true;
+        }
+    }
 
 
     protected override void OnParametersSet()

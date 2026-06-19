@@ -8,6 +8,7 @@ builder.Services.AddRazorComponents()
     .AddInteractiveWebAssemblyComponents();
 
 builder.Services.AddScoped<AuthState>();
+builder.Services.AddScoped<CartState>();
 
 var app = builder.Build();
 
