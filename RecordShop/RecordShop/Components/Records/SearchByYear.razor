@@ -1,0 +1,30 @@
+@rendermode InteractiveServer
+@using System.Net.Http.Json
+
+<div>
+    <input type="number" @bind="year" />
+    <button @onclick="Search">Search</button>
+</div>
+
+@if (results != null)
+{
+    @if (results.Count > 0)
+    {
+        <RecordsSummaryList Albums="results" />
+    }
+    else
+    {
+        <p>No records found.</p>
+    }
+}
+
+@code {
+    private int year = 1970;
+    private List<Album>? results;
+
+    private async Task Search()
+    {
+        var http = new HttpClient { BaseAddress = new Uri(ApiConfig.BaseUrl) };
+        results = await http.GetFromJsonAsync<List<Album>>($"/api/albums?releaseYear={year}");
+    }
+}
