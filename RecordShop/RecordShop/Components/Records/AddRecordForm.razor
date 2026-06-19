@@ -1,5 +1,6 @@
 @rendermode InteractiveServer
 @inject NavigationManager Nav
+@inject AuthState Auth
 
 <EditForm Model="newAlbum" OnValidSubmit="HandleSubmit">
     <DataAnnotationsValidator />
@@ -30,7 +31,7 @@
     private async Task HandleSubmit()
     {
         var http = new HttpClient{BaseAddress = new Uri(ApiConfig.BaseUrl)};
-        http.DefaultRequestHeaders.Add("X-Api-Key", ApiConfig.ApiKey);
+        if (Auth.IsLoggedIn) http.DefaultRequestHeaders.Add("Authorization", $"Bearer {Auth.Token}");
         var response = await http.PostAsJsonAsync("/api/albums", newAlbum);
         if (response.IsSuccessStatusCode)
         {

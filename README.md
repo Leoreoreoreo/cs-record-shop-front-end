@@ -21,7 +21,8 @@ The site expects the API at `http://localhost:5113`.
 - `/records` - all records
 - `/records/{id}` - a single record, with editing and deleting
 - `/records/add` - add a new record
-- `/search` - search by id, title or artist
+- `/search` - search by id, title, artist, genre or year
+- `/login` - log in (required to add, edit or delete records)
 - `/about` - about the shop
 
 ## How it works
