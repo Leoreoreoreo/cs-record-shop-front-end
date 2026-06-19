@@ -30,6 +30,7 @@
     private async Task HandleSubmit()
     {
         var http = new HttpClient{BaseAddress = new Uri(ApiConfig.BaseUrl)};
+        http.DefaultRequestHeaders.Add("X-Api-Key", ApiConfig.ApiKey);
         var response = await http.PostAsJsonAsync("/api/albums", newAlbum);
         if (response.IsSuccessStatusCode)
         {

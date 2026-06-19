@@ -82,6 +82,7 @@
             Stock = editableAlbum.Stock
         };
         var http = new HttpClient { BaseAddress = new Uri(ApiConfig.BaseUrl) };
+        http.DefaultRequestHeaders.Add("X-Api-Key", ApiConfig.ApiKey);
         var response = await http.PutAsJsonAsync($"/api/albums/{editableAlbum.Id}", editableAlbum);
         if (response.IsSuccessStatusCode)
         {
@@ -99,6 +100,7 @@
     private async Task DeleteRecord()
     {
         var http = new HttpClient{BaseAddress = new Uri(ApiConfig.BaseUrl)};
+        http.DefaultRequestHeaders.Add("X-Api-Key", ApiConfig.ApiKey);
         var response = await http.DeleteAsync($"/api/albums/{editableAlbum.Id}");
         if (!response.IsSuccessStatusCode)
         {
