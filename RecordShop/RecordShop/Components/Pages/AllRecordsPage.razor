@@ -4,6 +4,26 @@
 
 <h2>All Records</h2>
 
+<div class="records-controls">
+    <label>
+        Sort by:
+        <select @bind="sortBy" @bind:after="ApplySort">
+            <option value="">Default</option>
+            <option value="name">Name</option>
+            <option value="artist">Artist</option>
+            <option value="releaseYear">Release year</option>
+            <option value="price">Price</option>
+        </select>
+    </label>
+    <label>
+        Order:
+        <select @bind="order" @bind:after="ApplySort">
+            <option value="asc">Ascending</option>
+            <option value="desc">Descending</option>
+        </select>
+    </label>
+</div>
+
 @if (paged != null)
 {
     <RecordsSummaryList Albums="paged.Albums" />
@@ -23,6 +43,8 @@ else
     private PagedAlbums? paged;
     private int page = 1;
     private const int pageSize = 4;
+    private string sortBy = "";
+    private string order = "asc";
 
     protected override async Task OnInitializedAsync()
     {
@@ -31,8 +53,19 @@ else
 
     private async Task Load()
     {
+        var url = $"/api/albums?page={page}&pageSize={pageSize}";
+        if (!string.IsNullOrEmpty(sortBy))
+        {
+            url += $"&sortBy={sortBy}&order={order}";
+        }
         var http = new HttpClient { BaseAddress = new Uri(ApiConfig.BaseUrl) };
-        paged = await http.GetFromJsonAsync<PagedAlbums>($"/api/albums?page={page}&pageSize={pageSize}");
+        paged = await http.GetFromJsonAsync<PagedAlbums>(url);
+    }
+
+    private async Task ApplySort()
+    {
+        page = 1;
+        await Load();
     }
 
     private async Task NextPage()
