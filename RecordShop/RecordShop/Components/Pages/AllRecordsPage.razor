@@ -1,8 +1,18 @@
 @page "/records"
+@rendermode InteractiveServer
+@using System.Net.Http.Json
 
-@if (Albums != null)
+<h2>All Records</h2>
+
+@if (paged != null)
 {
-    <RecordsSummaryList Albums="Albums" />
+    <RecordsSummaryList Albums="paged.Albums" />
+
+    <div class="pagination-controls">
+        <button @onclick="PreviousPage" disabled="@(page <= 1)">Previous</button>
+        <span>Page @paged.Page of @(paged.TotalPages == 0 ? 1 : paged.TotalPages)</span>
+        <button @onclick="NextPage" disabled="@(page >= paged.TotalPages)">Next</button>
+    </div>
 }
 else
 {
@@ -10,6 +20,36 @@ else
 }
 
 @code {
-    [CascadingParameter]
-    public List<Album>? Albums { get; set; }
+    private PagedAlbums? paged;
+    private int page = 1;
+    private const int pageSize = 4;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Load();
+    }
+
+    private async Task Load()
+    {
+        var http = new HttpClient { BaseAddress = new Uri(ApiConfig.BaseUrl) };
+        paged = await http.GetFromJsonAsync<PagedAlbums>($"/api/albums?page={page}&pageSize={pageSize}");
+    }
+
+    private async Task NextPage()
+    {
+        if (paged != null && page < paged.TotalPages)
+        {
+            page++;
+            await Load();
+        }
+    }
+
+    private async Task PreviousPage()
+    {
+        if (page > 1)
+        {
+            page--;
+            await Load();
+        }
+    }
 }

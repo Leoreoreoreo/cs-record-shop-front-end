@@ -97,3 +97,11 @@ main form button {
     margin-top: 0.5rem;
     padding: 0.4rem 0.9rem;
 }
+
+/* Pagination controls on the all records page */
+.pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+}
