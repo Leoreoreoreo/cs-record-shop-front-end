@@ -1,0 +1,54 @@
+@page "/login"
+@rendermode InteractiveServer
+@using System.Net.Http.Json
+@inject AuthState Auth
+@inject NavigationManager Nav
+
+<PageTitle>Login - Leo's Record Shop</PageTitle>
+
+<h2>Login</h2>
+
+@if (Auth.IsLoggedIn)
+{
+    <p>You are logged in.</p>
+}
+else
+{
+    <div>
+        <input @bind="email" placeholder="Email" />
+        <input type="password" @bind="password" placeholder="Password" />
+        <button @onclick="HandleLogin">Log in</button>
+    </div>
+
+    @if (errorMessage != null)
+    {
+        <p>@errorMessage</p>
+    }
+}
+
+@code {
+    private string email = "";
+    private string password = "";
+    private string? errorMessage;
+
+    private async Task HandleLogin()
+    {
+        var http = new HttpClient { BaseAddress = new Uri(ApiConfig.BaseUrl) };
+        var response = await http.PostAsJsonAsync("/api/auth/login", new { email, password });
+        if (response.IsSuccessStatusCode)
+        {
+            var result = await response.Content.ReadFromJsonAsync<LoginResult>();
+            Auth.Token = result?.Token;
+            Nav.NavigateTo("/records");
+        }
+        else
+        {
+            errorMessage = "Login failed. Please check your email and password.";
+        }
+    }
+
+    private class LoginResult
+    {
+        public string? Token { get; set; }
+    }
+}
